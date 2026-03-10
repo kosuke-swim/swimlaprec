@@ -27,6 +27,8 @@ function App() {
   });
   const [showMeta, setShowMeta] = useState(false);
   const [showPlayer, setShowPlayer] = useState(true);
+  const [showLaps, setShowLaps] = useState(true);
+  const [showExport, setShowExport] = useState(true);
 
   const player = useVideoPlayer();
   const lapRecorder = useLapRecorder();
@@ -136,14 +138,30 @@ function App() {
       </div>
 
       {/* Lap table */}
-      <div className="px-4 pt-3 pb-3">
-        <LapTable
-          laps={lapRecorder.laps}
-          currentTime={player.currentTime}
-          startTime={lapRecorder.startTime}
-          onRemoveLap={lapRecorder.removeLap}
-        />
-      </div>
+      {lapRecorder.startTime !== null && (
+        <div className="px-4 pt-3 pb-3">
+          <button
+            onClick={() => setShowLaps(!showLaps)}
+            className="flex items-center justify-between w-full text-xs font-semibold text-slate-400 hover:text-slate-600 transition-colors mb-2"
+          >
+            <span>ラップ一覧{lapRecorder.laps.length > 0 ? `（${lapRecorder.laps.length}）` : ''}</span>
+            <svg
+              className={`w-4 h-4 transition-transform ${showLaps ? 'rotate-180' : ''}`}
+              fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          {showLaps && (
+            <LapTable
+              laps={lapRecorder.laps}
+              currentTime={player.currentTime}
+              startTime={lapRecorder.startTime}
+              onRemoveLap={lapRecorder.removeLap}
+            />
+          )}
+        </div>
+      )}
 
       {/* Controls section */}
       <div className="sticky bottom-0 bg-white/80 backdrop-blur-xl border-t border-slate-200/60 px-4 py-4 space-y-3 shadow-[0_-4px_20px_rgba(0,0,0,0.04)]">
@@ -199,12 +217,30 @@ function App() {
 
         {/* Export */}
         {lapRecorder.startTime !== null && lapRecorder.laps.length > 0 && (
-          <ExportButton
-            videoFile={videoFile}
-            metaInfo={metaInfo}
-            startTime={lapRecorder.startTime}
-            laps={lapRecorder.laps}
-          />
+          <div>
+            <button
+              onClick={() => setShowExport(!showExport)}
+              className="flex items-center justify-between w-full text-xs font-semibold text-slate-400 hover:text-slate-600 transition-colors"
+            >
+              <span>エクスポート</span>
+              <svg
+                className={`w-4 h-4 transition-transform ${showExport ? 'rotate-180' : ''}`}
+                fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {showExport && (
+              <div className="mt-2">
+                <ExportButton
+                  videoFile={videoFile}
+                  metaInfo={metaInfo}
+                  startTime={lapRecorder.startTime}
+                  laps={lapRecorder.laps}
+                />
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>
