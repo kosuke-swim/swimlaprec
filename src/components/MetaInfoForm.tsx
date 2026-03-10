@@ -8,7 +8,7 @@ interface Props {
 const STROKE_OPTIONS = ['自由形', '背泳ぎ', 'バタフライ', '平泳ぎ', '個人メドレー', 'フリーリレー', 'メドレーリレー'];
 const DISTANCE_OPTIONS = ['25m', '50m', '100m', '200m', '400m', '800m', '1500m'];
 
-const inputClass = "w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-300/50 focus:border-sky-300 transition-shadow placeholder:text-slate-300";
+const inputClass = "w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-base bg-white focus:outline-none focus:ring-2 focus:ring-sky-300/50 focus:border-sky-300 transition-shadow placeholder:text-slate-300";
 
 export function MetaInfoForm({ metaInfo, onChange }: Props) {
   const update = (field: keyof MetaInfo, value: string) => {

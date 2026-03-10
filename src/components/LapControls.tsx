@@ -80,7 +80,7 @@ export function LapControls({
               value={distance}
               onChange={(e) => setDistance(e.target.value)}
               placeholder="他"
-              className="w-16 px-2 py-1.5 rounded-lg border border-slate-200 text-sm text-center bg-white focus:outline-none focus:ring-2 focus:ring-sky-300"
+              className="w-16 px-2 py-1.5 rounded-lg border border-slate-200 text-base text-center bg-white focus:outline-none focus:ring-2 focus:ring-sky-300"
             />
           </div>
         </div>
@@ -122,7 +122,7 @@ export function LapControls({
               onChange={(e) => setStrokeCount(e.target.value)}
               placeholder="例: 12"
               min={0}
-              className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="w-full px-3 py-2 rounded-lg border border-slate-200 text-base bg-white focus:outline-none focus:ring-2 focus:ring-blue-300"
             />
           </div>
         )}
