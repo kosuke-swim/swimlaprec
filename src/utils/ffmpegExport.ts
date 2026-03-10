@@ -425,7 +425,7 @@ export async function exportVideo(options: ExportOptions): Promise<Blob> {
   // --- 5. Read result ---
   onProgress(92, 'ファイルを生成中...');
   const mp4Data = await ff.readFile('output.mp4');
-  const mp4Blob = new Blob([mp4Data], { type: 'video/mp4' });
+  const mp4Blob = new Blob([mp4Data as BlobPart], { type: 'video/mp4' });
 
   // --- 6. Cleanup FFmpeg FS ---
   for (let i = 0; i < totalFrames; i++) {
