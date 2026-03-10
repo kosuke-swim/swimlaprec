@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { LapMark, MetaInfo } from '../types';
 import { exportVideo } from '../utils/ffmpegExport';
 import { serverExport, isServerExportAvailable } from '../utils/serverExport';
+import { isWebCodecsSupported, exportVideoWebCodecs, WebCodecsError } from '../utils/webcodecExport';
 
 interface Props {
   videoFile: File;
@@ -10,62 +11,83 @@ interface Props {
   laps: LapMark[];
 }
 
+function getExportMethod(): 'server' | 'webcodecs' | 'ffmpeg' {
+  if (isServerExportAvailable()) return 'server';
+  if (isWebCodecsSupported()) return 'webcodecs';
+  return 'ffmpeg';
+}
+
+const METHOD_LABEL: Record<ReturnType<typeof getExportMethod>, string> = {
+  server: '',
+  webcodecs: '（端末処理）',
+  ffmpeg: '（互換モード）',
+};
+
 export function ExportButton({ videoFile, metaInfo, startTime, laps }: Props) {
   const [exporting, setExporting] = useState(false);
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState('');
 
-  const useServer = isServerExportAvailable();
+  const method = getExportMethod();
 
   const handleExport = async () => {
     setExporting(true);
     setProgress(0);
     setStatus('');
 
-    try {
-      if (useServer) {
-        // Server-side export (fast)
-        const url = await serverExport({
-          videoFile,
-          metaInfo,
-          startTime,
-          laps,
-          onProgress: (p, s) => {
-            setProgress(p);
-            setStatus(s);
-          },
-        });
+    const onProgress = (p: number, s: string) => {
+      setProgress(p);
+      setStatus(s);
+    };
 
-        // Download from R2 URL via fetch (cross-origin needs blob conversion)
+    try {
+      let blob: Blob;
+
+      if (method === 'server') {
+        const url = await serverExport({
+          videoFile, metaInfo, startTime, laps, onProgress,
+        });
         setStatus('ダウンロード中...');
         const dlRes = await fetch(url);
-        const blob = await dlRes.blob();
-        const blobUrl = URL.createObjectURL(blob);
+        const dlBlob = await dlRes.blob();
+        const blobUrl = URL.createObjectURL(dlBlob);
         const a = document.createElement('a');
         a.href = blobUrl;
         a.download = `swimlap_${metaInfo.swimmerName || 'export'}.mp4`;
         a.click();
         URL.revokeObjectURL(blobUrl);
-      } else {
-        // Client-side export (fallback)
-        const blob = await exportVideo({
-          videoFile,
-          metaInfo,
-          startTime,
-          laps,
-          onProgress: (p, s) => {
-            setProgress(p);
-            setStatus(s);
-          },
-        });
-
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `swimlap_${metaInfo.swimmerName || 'export'}.mp4`;
-        a.click();
-        URL.revokeObjectURL(url);
+        return;
       }
+
+      if (method === 'webcodecs') {
+        try {
+          blob = await exportVideoWebCodecs({
+            videoFile, metaInfo, startTime, laps, onProgress,
+          });
+        } catch (err) {
+          if (err instanceof WebCodecsError) {
+            // Fall back to FFmpeg
+            setProgress(0);
+            setStatus('WebCodecs非対応のため互換モードで処理中...');
+            blob = await exportVideo({
+              videoFile, metaInfo, startTime, laps, onProgress,
+            });
+          } else {
+            throw err;
+          }
+        }
+      } else {
+        blob = await exportVideo({
+          videoFile, metaInfo, startTime, laps, onProgress,
+        });
+      }
+
+      const url = URL.createObjectURL(blob!);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `swimlap_${metaInfo.swimmerName || 'export'}.mp4`;
+      a.click();
+      URL.revokeObjectURL(url);
     } catch (err) {
       console.error('Export failed:', err);
       setStatus('エクスポートに失敗しました');
@@ -96,7 +118,7 @@ export function ExportButton({ videoFile, metaInfo, startTime, laps }: Props) {
             処理中...
           </span>
         ) : (
-          `動画をエクスポート${useServer ? '' : '（端末処理）'}`
+          `動画をエクスポート${METHOD_LABEL[method]}`
         )}
       </button>
 
