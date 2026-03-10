@@ -26,6 +26,7 @@ function App() {
     date: '',
   });
   const [showMeta, setShowMeta] = useState(false);
+  const [showPlayer, setShowPlayer] = useState(true);
 
   const player = useVideoPlayer();
   const lapRecorder = useLapRecorder();
@@ -146,24 +147,42 @@ function App() {
 
       {/* Controls section */}
       <div className="sticky bottom-0 bg-white/80 backdrop-blur-xl border-t border-slate-200/60 px-4 py-4 space-y-3 shadow-[0_-4px_20px_rgba(0,0,0,0.04)]">
-        {/* Timeline */}
-        <Timeline
-          duration={player.duration}
-          currentTime={player.currentTime}
-          startTime={lapRecorder.startTime}
-          laps={lapRecorder.laps}
-          onSeek={player.seek}
-        />
+        {/* Player accordion */}
+        <button
+          onClick={() => setShowPlayer(!showPlayer)}
+          className="flex items-center justify-between w-full text-xs font-semibold text-slate-400 hover:text-slate-600 transition-colors"
+        >
+          <span>再生コントロール</span>
+          <svg
+            className={`w-4 h-4 transition-transform ${showPlayer ? 'rotate-180' : ''}`}
+            fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
 
-        {/* Video controls */}
-        <VideoControls
-          isPlaying={player.isPlaying}
-          currentTime={player.currentTime}
-          duration={player.duration}
-          onTogglePlay={player.togglePlay}
-          onSeek={player.seek}
-          onStepFrame={player.stepFrame}
-        />
+        {showPlayer && (
+          <div className="space-y-3">
+            {/* Timeline */}
+            <Timeline
+              duration={player.duration}
+              currentTime={player.currentTime}
+              startTime={lapRecorder.startTime}
+              laps={lapRecorder.laps}
+              onSeek={player.seek}
+            />
+
+            {/* Video controls */}
+            <VideoControls
+              isPlaying={player.isPlaying}
+              currentTime={player.currentTime}
+              duration={player.duration}
+              onTogglePlay={player.togglePlay}
+              onSeek={player.seek}
+              onStepFrame={player.stepFrame}
+            />
+          </div>
+        )}
 
         {/* Lap controls */}
         <LapControls
