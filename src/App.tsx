@@ -56,6 +56,7 @@ function App() {
             <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-sky-500 bg-clip-text text-transparent">
               SwimLapRec
             </h1>
+            <span className="text-xs text-slate-400 font-medium">v{__APP_VERSION__}</span>
           </div>
         </header>
         <div className="flex-1 flex items-center justify-center px-6 pb-12">
@@ -81,6 +82,7 @@ function App() {
             </svg>
           </div>
           <h1 className="text-base font-bold tracking-tight">SwimLapRec</h1>
+          <span className="text-[10px] text-white/50 font-medium">v{__APP_VERSION__}</span>
         </div>
         <div className="flex items-center gap-2">
           <button
