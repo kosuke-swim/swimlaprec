@@ -32,7 +32,7 @@ async function probeVideoCodec(): Promise<string> {
       codec,
       width: OUT_W,
       height: OUT_H,
-      bitrate: 2_000_000,
+      bitrate: 5_000_000,
     });
     if (support.supported) return codec;
   }
@@ -144,7 +144,7 @@ export async function exportVideoWebCodecs(options: ExportOptions): Promise<Blob
     codec: videoCodec,
     width: OUT_W,
     height: OUT_H,
-    bitrate: 2_000_000,
+    bitrate: 5_000_000,
     framerate: fps,
   });
 
