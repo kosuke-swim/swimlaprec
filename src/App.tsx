@@ -146,22 +146,24 @@ function App() {
           >
             <span>ラップ一覧{lapRecorder.laps.length > 0 ? `（${lapRecorder.laps.length}）` : ''}</span>
             <svg
-              className={`w-4 h-4 transition-transform ${showLaps ? 'rotate-180' : ''}`}
+              className={`w-4 h-4 transition-transform duration-200 ${showLaps ? 'rotate-180' : ''}`}
               fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
           </button>
-          {showLaps && (
-            <div className="mt-2">
-              <LapTable
-                laps={lapRecorder.laps}
-                currentTime={player.currentTime}
-                startTime={lapRecorder.startTime}
-                onRemoveLap={lapRecorder.removeLap}
-              />
+          <div className={`grid transition-[grid-template-rows] duration-200 ${showLaps ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
+            <div className="overflow-hidden">
+              <div className="mt-2">
+                <LapTable
+                  laps={lapRecorder.laps}
+                  currentTime={player.currentTime}
+                  startTime={lapRecorder.startTime}
+                  onRemoveLap={lapRecorder.removeLap}
+                />
+              </div>
             </div>
-          )}
+          </div>
         </div>
       )}
 
@@ -174,34 +176,36 @@ function App() {
         >
           <span>再生コントロール</span>
           <svg
-            className={`w-4 h-4 transition-transform ${showPlayer ? 'rotate-180' : ''}`}
+            className={`w-4 h-4 transition-transform duration-200 ${showPlayer ? 'rotate-180' : ''}`}
             fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
           </svg>
         </button>
-        {showPlayer && (
-          <div className="space-y-3">
-            {/* Timeline */}
-            <Timeline
-              duration={player.duration}
-              currentTime={player.currentTime}
-              startTime={lapRecorder.startTime}
-              laps={lapRecorder.laps}
-              onSeek={player.seek}
-            />
+        <div className={`grid transition-[grid-template-rows] duration-200 ${showPlayer ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
+          <div className="overflow-hidden">
+            <div className="space-y-3">
+              {/* Timeline */}
+              <Timeline
+                duration={player.duration}
+                currentTime={player.currentTime}
+                startTime={lapRecorder.startTime}
+                laps={lapRecorder.laps}
+                onSeek={player.seek}
+              />
 
-            {/* Video controls */}
-            <VideoControls
-              isPlaying={player.isPlaying}
-              currentTime={player.currentTime}
-              duration={player.duration}
-              onTogglePlay={player.togglePlay}
-              onSeek={player.seek}
-              onStepFrame={player.stepFrame}
-            />
+              {/* Video controls */}
+              <VideoControls
+                isPlaying={player.isPlaying}
+                currentTime={player.currentTime}
+                duration={player.duration}
+                onTogglePlay={player.togglePlay}
+                onSeek={player.seek}
+                onStepFrame={player.stepFrame}
+              />
+            </div>
           </div>
-        )}
+        </div>
 
         {/* Lap controls */}
         <LapControls
@@ -225,22 +229,24 @@ function App() {
             >
               <span>エクスポート</span>
               <svg
-                className={`w-4 h-4 transition-transform ${showExport ? 'rotate-180' : ''}`}
+                className={`w-4 h-4 transition-transform duration-200 ${showExport ? 'rotate-180' : ''}`}
                 fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
               </svg>
             </button>
-            {showExport && (
-              <div className="mt-2">
-                <ExportButton
-                  videoFile={videoFile}
-                  metaInfo={metaInfo}
-                  startTime={lapRecorder.startTime}
-                  laps={lapRecorder.laps}
-                />
+            <div className={`grid transition-[grid-template-rows] duration-200 ${showExport ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
+              <div className="overflow-hidden">
+                <div className="mt-2">
+                  <ExportButton
+                    videoFile={videoFile}
+                    metaInfo={metaInfo}
+                    startTime={lapRecorder.startTime}
+                    laps={lapRecorder.laps}
+                  />
+                </div>
               </div>
-            )}
+            </div>
           </div>
         )}
       </div>
