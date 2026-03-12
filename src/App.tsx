@@ -146,7 +146,7 @@ function App() {
           >
             <span>ラップ一覧{lapRecorder.laps.length > 0 ? `（${lapRecorder.laps.length}）` : ''}</span>
             <svg
-              className={`w-4 h-4 transition-transform duration-200 ${showLaps ? 'rotate-180' : ''}`}
+              className={`w-4 h-4 transition-transform duration-200 ${showLaps ? '' : 'rotate-180'}`}
               fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -176,7 +176,7 @@ function App() {
         >
           <span>再生コントロール</span>
           <svg
-            className={`w-4 h-4 transition-transform duration-200 ${showPlayer ? 'rotate-180' : ''}`}
+            className={`w-4 h-4 transition-transform duration-200 ${showPlayer ? '' : 'rotate-180'}`}
             fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -229,7 +229,7 @@ function App() {
             >
               <span>エクスポート</span>
               <svg
-                className={`w-4 h-4 transition-transform duration-200 ${showExport ? 'rotate-180' : ''}`}
+                className={`w-4 h-4 transition-transform duration-200 ${showExport ? '' : 'rotate-180'}`}
                 fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
