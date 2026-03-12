@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { VideoUploader } from './components/VideoUploader';
 import { VideoPlayer } from './components/VideoPlayer';
 import { VideoControls } from './components/VideoControls';
@@ -29,6 +29,21 @@ function App() {
   const [showPlayer, setShowPlayer] = useState(true);
   const [showLaps, setShowLaps] = useState(true);
   const [showExport, setShowExport] = useState(true);
+
+  const controlsRef = useRef<HTMLDivElement>(null);
+  const spacerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const controls = controlsRef.current;
+    if (!controls) return;
+    const observer = new ResizeObserver(() => {
+      if (spacerRef.current) {
+        spacerRef.current.style.height = `${controls.offsetHeight}px`;
+      }
+    });
+    observer.observe(controls);
+    return () => observer.disconnect();
+  }, []);
 
   const player = useVideoPlayer();
   const lapRecorder = useLapRecorder();
@@ -167,8 +182,11 @@ function App() {
         </div>
       )}
 
+      {/* Spacer for fixed controls */}
+      <div ref={spacerRef} />
+
       {/* Controls section */}
-      <div className="sticky bottom-0 bg-white/80 backdrop-blur-xl border-t border-slate-200/60 px-4 py-4 space-y-3 shadow-[0_-4px_20px_rgba(0,0,0,0.04)]">
+      <div ref={controlsRef} className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-slate-200/60 px-4 py-4 space-y-3 shadow-[0_-4px_20px_rgba(0,0,0,0.04)] z-50">
         {/* Player accordion */}
         <button
           onClick={() => setShowPlayer(!showPlayer)}
